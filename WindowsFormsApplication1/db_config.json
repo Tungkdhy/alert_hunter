@@ -1,0 +1,5 @@
+﻿{
+  "database_path": "1234",
+  "connection_string": "Data Source={0};Version=3;",
+  "auto_connect": false
+}

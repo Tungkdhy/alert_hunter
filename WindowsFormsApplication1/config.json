@@ -1,0 +1,4 @@
+﻿{
+  "BaseUrl": "http://127.0.0.1:8000/api/alerts",
+  "UserToken": "YOUR_SECRET_TOKEN_HERE"
+}

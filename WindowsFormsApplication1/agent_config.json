@@ -1,0 +1,58 @@
+{
+  "api_key": "CHANGE_ME_AGENT_API_KEY",
+  "debounce_ms": 350,
+  "http_timeout_sec": 15,
+  "init_hash_taken": true,
+  "monitor_dirs": [
+    "C:\\Users\\Admin\\Desktop\\UpdateFELive"
+  ],
+  "suspicious_extensions": [
+    ".php",
+    ".php3",
+    ".php4",
+    ".php5",
+    ".phtml",
+    ".phar",
+    ".asp",
+    ".aspx",
+    ".ashx",
+    ".asmx",
+    ".ascx",
+    ".jsp",
+    ".jspx",
+    ".cfm",
+    ".cgi",
+    ".pl",
+    ".htaccess"
+  ],
+  "ignore_hash": [ ],
+  "yara_rules_dir": "signatures",
+  "hash_db_path": "hashes.json",
+  "log_file": "wsdetector.log",
+  "log_rotate": {
+    "max_size_mb": 1000,
+    "max_backups": 5,
+    "max_age_days": 365,
+    "compress": true
+  },
+  "log_to_console": true,
+  "max_scan_file_size_mb": 100,
+  "scan_on_start": true,
+  "workers": 16,
+  "yara_reload_interval_sec": 3600,
+  "server_ip": "127.0.0.1",
+  "server_port": 8000,
+  "agent_id": "web02",
+  "host": {
+    "hostname": "MSI",
+    "os": "windows",
+    "arch": "amd64",
+    "kernel": "Microsoft Windows [Version 10.0.22631.6133]",
+    "macs": [
+      "00:D8:61:E3:6A:BC"
+    ],
+    "ipv4": [
+      "10.10.50.97"
+    ]
+  }
+}
