@@ -1,1 +1,58 @@
-mS5aLjTOt/jxBb2LU316vYum7Ue/Ta+2gVGEpnii8C6TwNlXHg72AuglACr5Kx5KJX/6tuuiTPNiB/UcAiFKa/39HIjkDXEzxy3ltOYJIY91XxTznIr4ABiLbFhQE1ZxrVekdN8jKU0EesgoHMQxK0QcoiH06Si6k8bN14GTED6n38zHmEwCcItNb1Yn50FM56Oryc+5M5rG34k9OVLL21dvJjAAoeDi7TxXAXSNx1IiKsFznIXgeC1ZkIs5xMW3JNp3omsjEUpXvPULmQsUGmF1VhHvp6w4LJJYaUfuG6WFnzX4g4IAEQI+JnuvM/V44dGU/UGQBFhQ7VB/GtzHFsXp1Nlx11ybnBGXuPTl8ZoEVswrHsDfBjsKlNSl7AJJXGSqEcYLOswEvnK04vYR8mxODXx++L7zZAUO3zfMq0VjQCAEgRhV+lqdaHS6k3zRh70HBniPCQ8abMcmtZtWw97yIj19xYR84RHKVVoAvU3SuzhDOSRUYV/GFbvj30KVbzu5l48hPLd8ZYZ9T8v24aBRBKGrOoW7qFaT1rir6hpLukguQqLwzdIGL8XkPSFu+SmgcjkiDJCr+8L2RipmtqIny5DX0CUQAeYkX+OV2geP40dP/HDotHTTYtD1a20eeneH3/XGP2/M48v8KcRaaBJl8kGOSlFYGLzIJzq8xHs8wPpCA0EEOHlUkp6z6tu+g/SJI+Ucx4enT1qND9l2/M55wXE3ww0tczCuDbi+5WWuDsugbk3nFMWg5JQ7LlOoTR0dRnj91FoloIPyitx1K/DjN2JqKHwY2aNwHUbmMr6j5q0uYZsn8o00IX6sPkmwQ7UZLs00YOy3VySi70gvZJ1a5W+V4R+e7ffchqCnUkgVQrs2nHDBDkLHop6gtKeh/F8xlEFjUymOQqQLLogbfWsHrtQNpPCNz6UnkjK547T6VAJc/5vQqPnqiwMuNTZwBiGs+3B8biAldqQOxfNJiuyz5LBIkHCwvUyp0Ov5rmPjsqiE5oU2OlKQcp6IB52iJo9BmwVUKvCPnUvG0IitWjWOAgMIJ4PgFiEXovnQ0mRDNfxFAon5WJbSvtL074eIOBNMIQjF9bGWn+9PZbZGf4sqYaoiiQUKDAEMFNcUKzojBX9BpWaFZnIPovPrGS6zRmnP0O0rlT4GZ+vWzzxQPu6MDyOeB7/rQRBzIl9Y9IaNg2rLNg/hyYT29BL6GFEDKl/aBe90tEdTZ8TxihmjS19/CuDQRHdQGNo94wOkfmIY0bhVjRT64pqNIZaJzj6UWlc+ztctMkri8Oc7zRw3w+YRRLyu/EzciNgUK5CE4wu9mT5SvcvmNL/VdiH4Oq8Hf+x/Rpljck2pJ7f7ETyaFck++VwiVQESntPiwArAxQ+0NDqYLWtPSaBOG+tHtIxVtvwAFBvZnTXoqfRgKbFP/L9y0YtUFjMQaYLSLMrlkLZmr7majms7vijdHTzGN4FsuHRmEm7LQ3XEEzt44ph+6BtJ0Z8zbhuH3UAJigs3WP+BAtn0AONB+P8k9A8aciZd3UDNxwLeRZV5ENftQ9SryYYtNOTrr4vz1+Lsr+vHPH6cpE6Spvg7BtSa
+{
+  "api_key": "CHANGE_ME_AGENT_API_KEY",
+  "debounce_ms": 350,
+  "http_timeout_sec": 15,
+  "init_hash_taken": true,
+  "monitor_dirs": [
+    "C:\\Users\\Admin\\Desktop\\UpdateFELive"
+  ],
+  "suspicious_extensions": [
+    ".php",
+    ".php3",
+    ".php4",
+    ".php5",
+    ".phtml",
+    ".phar",
+    ".asp",
+    ".aspx",
+    ".ashx",
+    ".asmx",
+    ".ascx",
+    ".jsp",
+    ".jspx",
+    ".cfm",
+    ".cgi",
+    ".pl",
+    ".htaccess"
+  ],
+  "ignore_hash": [ ],
+  "yara_rules_dir": "signatures",
+  "hash_db_path": "hashes.json",
+  "log_file": "wsdetector.log",
+  "log_rotate": {
+    "max_size_mb": 1000,
+    "max_backups": 5,
+    "max_age_days": 365,
+    "compress": true
+  },
+  "log_to_console": true,
+  "max_scan_file_size_mb": 100,
+  "scan_on_start": true,
+  "workers": 16,
+  "yara_reload_interval_sec": 3600,
+  "server_ip": "127.0.0.1",
+  "server_port": 8000,
+  "agent_id": "web02",
+  "host": {
+    "hostname": "MSI",
+    "os": "windows",
+    "arch": "amd64",
+    "kernel": "Microsoft Windows [Version 10.0.22631.6133]",
+    "macs": [
+      "00:D8:61:E3:6A:BC"
+    ],
+    "ipv4": [
+      "10.10.50.97"
+    ]
+  }
+}

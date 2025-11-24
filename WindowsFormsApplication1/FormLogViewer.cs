@@ -24,6 +24,7 @@ namespace WindowsFormsApplication1
         private DateTime? filterFromDate = null;
         private DateTime? filterToDate = null;
         private string filterSeverity = null;
+        private string filterTag = null;
 
         public FormLogViewer()
         {
@@ -56,6 +57,11 @@ namespace WindowsFormsApplication1
             cmbSeverity.Items.Add("Thấp");
             cmbSeverity.Items.Add("Thông tin");
             cmbSeverity.SelectedIndex = 0; // Default: "Tất cả"
+
+            // Initialize tag filter
+            cmbTag.Items.Add("Tất cả");
+            cmbTag.SelectedIndex = 0; // Default: "Tất cả"
+            cmbTag.SelectedIndexChanged += CmbTag_SelectedIndexChanged;
 
             btnBrowse.Click += BtnBrowse_Click;
             btnReload.Click += async delegate
@@ -205,6 +211,43 @@ namespace WindowsFormsApplication1
 
             cmbSeverity.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbSeverity.DropDownHeight = 200;
+
+            // Style Tag ComboBox
+            cmbTag.Font = new Font("Segoe UI", 11f);
+            cmbTag.FlatStyle = FlatStyle.Flat;
+            cmbTag.BackColor = Color.White;
+            cmbTag.ForeColor = Color.FromArgb(50, 50, 50);
+            cmbTag.BorderColor = Color.FromArgb(200, 200, 200);
+
+            // Custom draw for better appearance
+            cmbTag.DrawMode = DrawMode.OwnerDrawFixed;
+            cmbTag.DrawItem += (s, e) =>
+            {
+                if (e.Index < 0) return;
+
+                e.DrawBackground();
+                string text = cmbTag.Items[e.Index].ToString();
+                using (Brush brush = new SolidBrush(e.ForeColor))
+                {
+                    e.Graphics.DrawString(text, cmbTag.Font, brush, e.Bounds);
+                }
+
+                // Highlight selected item
+                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+                {
+                    using (Pen pen = new Pen(Primary, 2))
+                    {
+                        e.Graphics.DrawRectangle(pen, e.Bounds);
+                    }
+                }
+            };
+
+            cmbTag.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbTag.DropDownHeight = 200;
+
+            // Style label
+            lblTag.Font = new Font("Segoe UI Semibold", 10f);
+            lblTag.ForeColor = Color.FromArgb(50, 50, 50);
         }
 
         private void StyleButtons()
@@ -302,6 +345,16 @@ namespace WindowsFormsApplication1
                 filterSeverity = null;
             }
 
+            // Set filter tag
+            if (cmbTag.SelectedIndex > 0 && cmbTag.SelectedItem != null)
+            {
+                filterTag = cmbTag.SelectedItem.ToString();
+            }
+            else
+            {
+                filterTag = null;
+            }
+
             currentPage = 1; // Reset về trang đầu
             await LoadLogsFromDatabase();
         }
@@ -311,9 +364,11 @@ namespace WindowsFormsApplication1
             dtpFromDate.Checked = false;
             dtpToDate.Checked = false;
             cmbSeverity.SelectedIndex = 0;
+            cmbTag.SelectedIndex = 0;
             filterFromDate = null;
             filterToDate = null;
             filterSeverity = null;
+            filterTag = null;
 
             currentPage = 1; // Reset về trang đầu
             await LoadLogsFromDatabase();
@@ -372,10 +427,19 @@ namespace WindowsFormsApplication1
                 // Đọc tất cả logs từ DB (với date filter)
                 List<AlertLogEntry> allLogs = await System.Threading.Tasks.Task.Run(() => ReadAllLogsFromSQLite(dbPath));
 
+                // Load danh sách tag vào ComboBox
+                await System.Threading.Tasks.Task.Run(() => LoadTagList(dbPath, allLogs));
+
                 // Lọc theo severity nếu có
                 if (!string.IsNullOrEmpty(filterSeverity))
                 {
                     allLogs = allLogs.Where(log => log.Severity == filterSeverity).ToList();
+                }
+
+                // Lọc theo tag nếu có
+                if (!string.IsNullOrEmpty(filterTag))
+                {
+                    allLogs = allLogs.Where(log => log.Tag == filterTag).ToList();
                 }
 
                 // Đếm tổng số bản ghi sau khi lọc
@@ -448,6 +512,11 @@ namespace WindowsFormsApplication1
                         dgvLogs.Columns["TimestampFormatted"].HeaderText = "Thời gian";
                         dgvLogs.Columns["TimestampFormatted"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
                     }
+                    if (dgvLogs.Columns["Tag"] != null)
+                    {
+                        dgvLogs.Columns["Tag"].HeaderText = "Phiên bản";
+                        dgvLogs.Columns["Tag"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    }
                 }
 
                 // Apply colors will be triggered by DataBindingComplete event
@@ -467,6 +536,13 @@ namespace WindowsFormsApplication1
                         filterInfo += $" • Mức độ: {filterSeverity}";
                     else
                         filterInfo = $" • Mức độ: {filterSeverity}";
+                }
+                if (!string.IsNullOrEmpty(filterTag))
+                {
+                    if (!string.IsNullOrEmpty(filterInfo))
+                        filterInfo += $" • Tag: {filterTag}";
+                    else
+                        filterInfo = $" • Tag: {filterTag}";
                 }
 
                 lblStatus.Text = string.Format("Hiển thị {0}-{1} / {2} bản ghi • Trang {3}/{4}{5} • {6:HH:mm:ss}",
@@ -630,8 +706,8 @@ namespace WindowsFormsApplication1
 
             try
             {
-                // Đọc tất cả records từ các cột cụ thể với filter date
-                string selectQuery = $"SELECT id, ts, path, reason, hash_before, hash_after, level, op, sent_remote, yara_rules FROM {tableName}";
+                // Đọc tất cả records từ các cột cụ thể với filter date (thêm cột tag)
+                string selectQuery = $"SELECT id, ts, path, reason, hash_before, hash_after, level, op, sent_remote, yara_rules, tag FROM {tableName}";
 
                 // Thêm điều kiện WHERE nếu có filter date
                 if (filterFromDate.HasValue || filterToDate.HasValue)
@@ -671,9 +747,10 @@ namespace WindowsFormsApplication1
                             string op = dataReader.IsDBNull(7) ? "" : dataReader.GetString(7);
                             int sentRemote = dataReader.IsDBNull(8) ? 0 : dataReader.GetInt32(8);
                             string yaraRules = dataReader.IsDBNull(9) ? "" : dataReader.GetString(9);
+                            string tag = dataReader.IsDBNull(10) ? "" : dataReader.GetString(10);
 
                             // Parse log entry
-                            var logEntry = ParseLogEntry(id, ts, path, reason, hashBefore, hashAfter, level, op, sentRemote, yaraRules);
+                            var logEntry = ParseLogEntry(id, ts, path, reason, hashBefore, hashAfter, level, op, sentRemote, yaraRules, tag);
                             if (logEntry != null)
                             {
                                 logs.Add(logEntry);
@@ -758,9 +835,10 @@ namespace WindowsFormsApplication1
                                 string op = dataReader.IsDBNull(7) ? "" : dataReader.GetString(7);
                                 int sentRemote = dataReader.IsDBNull(8) ? 0 : dataReader.GetInt32(8);
                                 string yaraRules = dataReader.IsDBNull(9) ? "" : dataReader.GetString(9);
+                                string tag = dataReader.IsDBNull(10) ? "" : dataReader.GetString(10);
 
                                 // Parse log entry
-                                var logEntry = ParseLogEntry(id, ts, path, reason, hashBefore, hashAfter, level, op, sentRemote, yaraRules);
+                                var logEntry = ParseLogEntry(id, ts, path, reason, hashBefore, hashAfter, level, op, sentRemote, yaraRules, tag);
                                 if (logEntry != null)
                                 {
                                     logs.Add(logEntry);
@@ -783,7 +861,7 @@ namespace WindowsFormsApplication1
             return logs;
         }
 
-        private AlertLogEntry ParseLogEntry(int id, string ts, string path, string reason, string hashBefore, string hashAfter, int level, string op, int sentRemote, string yaraRules)
+        private AlertLogEntry ParseLogEntry(int id, string ts, string path, string reason, string hashBefore, string hashAfter, int level, string op, int sentRemote, string yaraRules, string tag = "")
         {
             try
             {
@@ -797,6 +875,7 @@ namespace WindowsFormsApplication1
                 entry.Timestamp = ts ?? "";
                 entry.Level = level;
                 entry.Op = op ?? "";
+                entry.Tag = tag ?? "";
 
                 // Format timestamp
                 if (!string.IsNullOrEmpty(entry.Timestamp))
@@ -880,7 +959,8 @@ namespace WindowsFormsApplication1
                     ["level"] = level,
                     ["op"] = op,
                     ["sent_remote"] = sentRemote,
-                    ["yara_rules"] = yaraRules
+                    ["yara_rules"] = yaraRules,
+                    ["tag"] = tag
                 };
                 entry.RawJson = rawJsonObj.ToString();
 
@@ -935,6 +1015,7 @@ namespace WindowsFormsApplication1
             public string RawJson { get; set; }
             public int Level { get; set; }
             public string Op { get; set; }
+            public string Tag { get; set; }
 
             public AlertLogEntry()
             {
@@ -950,6 +1031,89 @@ namespace WindowsFormsApplication1
                 RawJson = "";
                 Level = 0;
                 Op = "";
+                Tag = "";
+            }
+        }
+
+        private void LoadTagList(string dbPath, List<AlertLogEntry> allLogs)
+        {
+            try
+            {
+                // Lấy danh sách tag duy nhất từ logs
+                var uniqueTags = allLogs
+                    .Where(log => !string.IsNullOrWhiteSpace(log.Tag))
+                    .Select(log => log.Tag)
+                    .Distinct()
+                    .OrderBy(tag => tag)
+                    .ToList();
+
+                // Cập nhật UI thread-safe
+                if (this.InvokeRequired)
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        string currentSelection = cmbTag.SelectedItem?.ToString();
+                        cmbTag.SelectedIndexChanged -= CmbTag_SelectedIndexChanged; // Tạm thời tắt event
+                        cmbTag.Items.Clear();
+                        cmbTag.Items.Add("Tất cả");
+                        foreach (var tag in uniqueTags)
+                        {
+                            cmbTag.Items.Add(tag);
+                        }
+                        // Khôi phục selection nếu có
+                        if (!string.IsNullOrEmpty(currentSelection))
+                        {
+                            int index = cmbTag.Items.IndexOf(currentSelection);
+                            if (index >= 0)
+                                cmbTag.SelectedIndex = index;
+                            else
+                                cmbTag.SelectedIndex = 0;
+                        }
+                        else
+                        {
+                            cmbTag.SelectedIndex = 0;
+                        }
+                        cmbTag.SelectedIndexChanged += CmbTag_SelectedIndexChanged; // Bật lại event
+                    }));
+                }
+                else
+                {
+                    string currentSelection = cmbTag.SelectedItem?.ToString();
+                    cmbTag.SelectedIndexChanged -= CmbTag_SelectedIndexChanged; // Tạm thời tắt event
+                    cmbTag.Items.Clear();
+                    cmbTag.Items.Add("Tất cả");
+                    foreach (var tag in uniqueTags)
+                    {
+                        cmbTag.Items.Add(tag);
+                    }
+                    // Khôi phục selection nếu có
+                    if (!string.IsNullOrEmpty(currentSelection))
+                    {
+                        int index = cmbTag.Items.IndexOf(currentSelection);
+                        if (index >= 0)
+                            cmbTag.SelectedIndex = index;
+                        else
+                            cmbTag.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        cmbTag.SelectedIndex = 0;
+                    }
+                    cmbTag.SelectedIndexChanged += CmbTag_SelectedIndexChanged; // Bật lại event
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Lỗi load tag list: {ex.Message}");
+            }
+        }
+
+        private async void CmbTag_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Chỉ filter khi người dùng chọn, không phải khi load
+            if (cmbTag.SelectedIndex >= 0)
+            {
+                await BtnFilter_Click();
             }
         }
 

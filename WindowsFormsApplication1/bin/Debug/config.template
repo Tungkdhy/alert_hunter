@@ -1,65 +1,59 @@
-﻿{
-  "api_key": "CHANGE_ME_AGENT_API_KEY",
+{
+  "api_key": "your_secret_agent_api_key_here",
+
   "debounce_ms": 350,
   "http_timeout_sec": 15,
   "init_hash_taken": false,
+
   "monitor_dirs": [
-    "C:\\Users\\gotru\\OneDrive\\Desktop\\1",
-    "C:\\Users\\Admin\\Desktop\\shell"
+    "C:\\Users\\gotru\\OneDrive\\Desktop\\1"
   ],
-  "ignore_all": [],
+
+  "ignore_all": [
+  ],
+
   "suspicious_extensions": [
-    ".php",
-    ".php3",
-    ".php4",
-    ".php5",
-    ".phtml",
-    ".phar",
-    ".asp",
-    ".aspx",
-    ".ashx",
-    ".asmx",
-    ".ascx",
-    ".jsp",
-    ".jspx",
+    ".php", ".php3", ".php4", ".php5", ".phtml", ".phar",
+    ".asp", ".aspx", ".ashx", ".asmx", ".ascx",
+    ".jsp", ".jspx",
     ".cfm",
-    ".cgi",
-    ".pl",
-    ".py",
-    ".rb",
-    ".js",
-    ".jar",
+    ".cgi", ".pl",
+    ".py", ".rb",
+    ".js", ".jar",
     ".inc",
-    ".htaccess",
-    "web.config",
-    ".exe",
-    ".dll",
-    ".bat",
-    ".cmd",
-    ".ps1",
-    ".vbs",
-    ".scr",
-    ".pif",
-    ".com",
-    ".wsf",
-    ".hta",
-    ".sh",
-    ".so"
+    ".htaccess", "web.config",
+    ".exe", ".dll", ".bat", ".cmd", ".ps1", ".vbs",
+    ".scr", ".pif", ".com", ".wsf", ".hta",
+    ".sh", ".so"
   ],
-  "ignore_hash": [],
+
+  "ignore_hash": [
+  ],
+
   "yara_rules_dir": "signatures",
+
   "sqlite_path": "wsdetector.db",
+
   "alert_level": 1,
-  "ignore_scan_yara": [],
-  "ignore_send_alert": [],
+
+  "ignore_scan_yara": [
+  ],
+
+  "ignore_send_alert": [
+  ],
+
   "periodic_scan_days": 3,
+
   "log_to_console": true,
   "max_scan_file_size_mb": 100,
   "scan_on_start": true,
   "workers": 0,
   "yara_reload_interval_sec": 300,
+
   "server_ip": "127.0.0.1",
   "server_port": 8000,
   "agent_id": "agent-web-01",
+  "tag": "v1.0.0",
+
   "host": null
 }

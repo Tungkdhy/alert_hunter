@@ -29,6 +29,8 @@ namespace WindowsFormsApplication1
         private TextBox txtAgentID;
         private Label lblApiKey;
         private TextBox txtApiKey;
+        private Label lblVersion;
+        private TextBox txtVersion;
         private GroupBox grpConnectionSettings;
         private Label lblHttpTimeout;
         private TextBox txtHttpTimeout;
@@ -110,6 +112,8 @@ namespace WindowsFormsApplication1
             this.txtAgentID = new System.Windows.Forms.TextBox();
             this.lblApiKey = new System.Windows.Forms.Label();
             this.txtApiKey = new System.Windows.Forms.TextBox();
+            this.lblVersion = new System.Windows.Forms.Label();
+            this.txtVersion = new System.Windows.Forms.TextBox();
             this.grpServerConnection = new System.Windows.Forms.GroupBox();
             this.lblServerIP = new System.Windows.Forms.Label();
             this.txtServerIP = new System.Windows.Forms.TextBox();
@@ -268,7 +272,7 @@ namespace WindowsFormsApplication1
             this.tabInput.Padding = new System.Windows.Forms.Padding(3);
             this.tabInput.Size = new System.Drawing.Size(1351, 506);
             this.tabInput.TabIndex = 0;
-            this.tabInput.Text = "Đường dẫn";
+            this.tabInput.Text = "Cơ bản";
             this.tabInput.UseVisualStyleBackColor = true;
             // 
             // scrollPanel
@@ -300,10 +304,10 @@ namespace WindowsFormsApplication1
             this.grpConnectionSettings.Controls.Add(this.txtDebounce);
             this.grpConnectionSettings.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
             this.grpConnectionSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(120)))));
-            this.grpConnectionSettings.Location = new System.Drawing.Point(23, 940);
+            this.grpConnectionSettings.Location = new System.Drawing.Point(23, 982);
             this.grpConnectionSettings.Name = "grpConnectionSettings";
             this.grpConnectionSettings.Padding = new System.Windows.Forms.Padding(15);
-            this.grpConnectionSettings.Size = new System.Drawing.Size(1278, 101);
+            this.grpConnectionSettings.Size = new System.Drawing.Size(1292, 101);
             this.grpConnectionSettings.TabIndex = 4;
             this.grpConnectionSettings.TabStop = false;
             this.grpConnectionSettings.Text = "Cài đặt Kết nối";
@@ -329,7 +333,7 @@ namespace WindowsFormsApplication1
             this.txtHttpTimeout.Location = new System.Drawing.Point(18, 48);
             this.txtHttpTimeout.Margin = new System.Windows.Forms.Padding(0, 0, 100, 0);
             this.txtHttpTimeout.Name = "txtHttpTimeout";
-            this.txtHttpTimeout.Size = new System.Drawing.Size(561, 29);
+            this.txtHttpTimeout.Size = new System.Drawing.Size(575, 29);
             this.txtHttpTimeout.TabIndex = 1;
             // 
             // lblDebounce
@@ -349,7 +353,7 @@ namespace WindowsFormsApplication1
             this.txtDebounce.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.txtDebounce.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtDebounce.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.txtDebounce.Location = new System.Drawing.Point(638, 48);
+            this.txtDebounce.Location = new System.Drawing.Point(652, 48);
             this.txtDebounce.Name = "txtDebounce";
             this.txtDebounce.Size = new System.Drawing.Size(594, 29);
             this.txtDebounce.TabIndex = 3;
@@ -362,12 +366,14 @@ namespace WindowsFormsApplication1
             this.grpAgentConfig.Controls.Add(this.txtAgentID);
             this.grpAgentConfig.Controls.Add(this.lblApiKey);
             this.grpAgentConfig.Controls.Add(this.txtApiKey);
+            this.grpAgentConfig.Controls.Add(this.lblVersion);
+            this.grpAgentConfig.Controls.Add(this.txtVersion);
             this.grpAgentConfig.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
             this.grpAgentConfig.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(120)))));
             this.grpAgentConfig.Location = new System.Drawing.Point(23, 823);
             this.grpAgentConfig.Name = "grpAgentConfig";
             this.grpAgentConfig.Padding = new System.Windows.Forms.Padding(15);
-            this.grpAgentConfig.Size = new System.Drawing.Size(1278, 103);
+            this.grpAgentConfig.Size = new System.Drawing.Size(1292, 145);
             this.grpAgentConfig.TabIndex = 3;
             this.grpAgentConfig.TabStop = false;
             this.grpAgentConfig.Text = "Cấu hình Agent";
@@ -393,7 +399,7 @@ namespace WindowsFormsApplication1
             this.txtAgentID.Location = new System.Drawing.Point(18, 48);
             this.txtAgentID.Margin = new System.Windows.Forms.Padding(0, 0, 100, 0);
             this.txtAgentID.Name = "txtAgentID";
-            this.txtAgentID.Size = new System.Drawing.Size(561, 29);
+            this.txtAgentID.Size = new System.Drawing.Size(575, 29);
             this.txtAgentID.TabIndex = 1;
             // 
             // lblApiKey
@@ -413,10 +419,33 @@ namespace WindowsFormsApplication1
             this.txtApiKey.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.txtApiKey.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtApiKey.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.txtApiKey.Location = new System.Drawing.Point(638, 48);
+            this.txtApiKey.Location = new System.Drawing.Point(652, 48);
             this.txtApiKey.Name = "txtApiKey";
             this.txtApiKey.Size = new System.Drawing.Size(594, 29);
             this.txtApiKey.TabIndex = 3;
+            // 
+            // lblVersion
+            // 
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F);
+            this.lblVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.lblVersion.Location = new System.Drawing.Point(18, 88);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(85, 21);
+            this.lblVersion.TabIndex = 4;
+            this.lblVersion.Text = "Phiên bản:";
+            // 
+            // txtVersion
+            // 
+            this.txtVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtVersion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.txtVersion.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtVersion.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.txtVersion.Location = new System.Drawing.Point(18, 108);
+            this.txtVersion.Name = "txtVersion";
+            this.txtVersion.Size = new System.Drawing.Size(1228, 29);
+            this.txtVersion.TabIndex = 5;
             // 
             // grpServerConnection
             // 
@@ -431,7 +460,7 @@ namespace WindowsFormsApplication1
             this.grpServerConnection.Location = new System.Drawing.Point(23, 710);
             this.grpServerConnection.Name = "grpServerConnection";
             this.grpServerConnection.Padding = new System.Windows.Forms.Padding(15);
-            this.grpServerConnection.Size = new System.Drawing.Size(1278, 101);
+            this.grpServerConnection.Size = new System.Drawing.Size(1292, 101);
             this.grpServerConnection.TabIndex = 2;
             this.grpServerConnection.TabStop = false;
             this.grpServerConnection.Text = "Kết nối Server";
@@ -457,7 +486,7 @@ namespace WindowsFormsApplication1
             this.txtServerIP.Location = new System.Drawing.Point(18, 48);
             this.txtServerIP.Margin = new System.Windows.Forms.Padding(0, 0, 100, 0);
             this.txtServerIP.Name = "txtServerIP";
-            this.txtServerIP.Size = new System.Drawing.Size(561, 29);
+            this.txtServerIP.Size = new System.Drawing.Size(575, 29);
             this.txtServerIP.TabIndex = 1;
             // 
             // lblServerPort
@@ -477,7 +506,7 @@ namespace WindowsFormsApplication1
             this.txtServerPort.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.txtServerPort.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtServerPort.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.txtServerPort.Location = new System.Drawing.Point(638, 48);
+            this.txtServerPort.Location = new System.Drawing.Point(652, 48);
             this.txtServerPort.Name = "txtServerPort";
             this.txtServerPort.Size = new System.Drawing.Size(594, 29);
             this.txtServerPort.TabIndex = 3;
@@ -500,7 +529,7 @@ namespace WindowsFormsApplication1
             this.grpFilePaths.Location = new System.Drawing.Point(23, 495);
             this.grpFilePaths.Name = "grpFilePaths";
             this.grpFilePaths.Padding = new System.Windows.Forms.Padding(15);
-            this.grpFilePaths.Size = new System.Drawing.Size(1278, 209);
+            this.grpFilePaths.Size = new System.Drawing.Size(1292, 209);
             this.grpFilePaths.TabIndex = 1;
             this.grpFilePaths.TabStop = false;
             this.grpFilePaths.Text = "Đường dẫn File";
@@ -525,7 +554,7 @@ namespace WindowsFormsApplication1
             this.txtProgramDir.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.txtProgramDir.Location = new System.Drawing.Point(18, 156);
             this.txtProgramDir.Name = "txtProgramDir";
-            this.txtProgramDir.Size = new System.Drawing.Size(1140, 29);
+            this.txtProgramDir.Size = new System.Drawing.Size(1154, 29);
             this.txtProgramDir.TabIndex = 7;
             // 
             // btnBrowseProgramDir
@@ -536,7 +565,7 @@ namespace WindowsFormsApplication1
             this.btnBrowseProgramDir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowseProgramDir.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnBrowseProgramDir.ForeColor = System.Drawing.Color.White;
-            this.btnBrowseProgramDir.Location = new System.Drawing.Point(1169, 155);
+            this.btnBrowseProgramDir.Location = new System.Drawing.Point(1183, 155);
             this.btnBrowseProgramDir.Name = "btnBrowseProgramDir";
             this.btnBrowseProgramDir.Size = new System.Drawing.Size(80, 30);
             this.btnBrowseProgramDir.TabIndex = 8;
@@ -563,7 +592,7 @@ namespace WindowsFormsApplication1
             this.txtSqlitePath.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.txtSqlitePath.Location = new System.Drawing.Point(18, 102);
             this.txtSqlitePath.Name = "txtSqlitePath";
-            this.txtSqlitePath.Size = new System.Drawing.Size(1140, 29);
+            this.txtSqlitePath.Size = new System.Drawing.Size(1154, 29);
             this.txtSqlitePath.TabIndex = 4;
             // 
             // btnBrowseSqlitePath
@@ -574,7 +603,7 @@ namespace WindowsFormsApplication1
             this.btnBrowseSqlitePath.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowseSqlitePath.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnBrowseSqlitePath.ForeColor = System.Drawing.Color.White;
-            this.btnBrowseSqlitePath.Location = new System.Drawing.Point(1169, 101);
+            this.btnBrowseSqlitePath.Location = new System.Drawing.Point(1183, 101);
             this.btnBrowseSqlitePath.Name = "btnBrowseSqlitePath";
             this.btnBrowseSqlitePath.Size = new System.Drawing.Size(80, 30);
             this.btnBrowseSqlitePath.TabIndex = 5;
@@ -601,7 +630,7 @@ namespace WindowsFormsApplication1
             this.txtYaraRulesDir.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.txtYaraRulesDir.Location = new System.Drawing.Point(18, 48);
             this.txtYaraRulesDir.Name = "txtYaraRulesDir";
-            this.txtYaraRulesDir.Size = new System.Drawing.Size(1140, 29);
+            this.txtYaraRulesDir.Size = new System.Drawing.Size(1154, 29);
             this.txtYaraRulesDir.TabIndex = 1;
             // 
             // btnBrowseYaraRulesDir
@@ -612,7 +641,7 @@ namespace WindowsFormsApplication1
             this.btnBrowseYaraRulesDir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowseYaraRulesDir.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnBrowseYaraRulesDir.ForeColor = System.Drawing.Color.White;
-            this.btnBrowseYaraRulesDir.Location = new System.Drawing.Point(1169, 47);
+            this.btnBrowseYaraRulesDir.Location = new System.Drawing.Point(1183, 47);
             this.btnBrowseYaraRulesDir.Name = "btnBrowseYaraRulesDir";
             this.btnBrowseYaraRulesDir.Size = new System.Drawing.Size(80, 30);
             this.btnBrowseYaraRulesDir.TabIndex = 2;
@@ -637,7 +666,7 @@ namespace WindowsFormsApplication1
             this.tableLayoutInput.RowCount = 2;
             this.tableLayoutInput.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutInput.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutInput.Size = new System.Drawing.Size(1278, 452);
+            this.tableLayoutInput.Size = new System.Drawing.Size(1292, 452);
             this.tableLayoutInput.TabIndex = 0;
             // 
             // grpMonitorDirs
@@ -655,7 +684,7 @@ namespace WindowsFormsApplication1
             this.grpMonitorDirs.Margin = new System.Windows.Forms.Padding(3, 3, 10, 10);
             this.grpMonitorDirs.Name = "grpMonitorDirs";
             this.grpMonitorDirs.Padding = new System.Windows.Forms.Padding(15);
-            this.grpMonitorDirs.Size = new System.Drawing.Size(623, 220);
+            this.grpMonitorDirs.Size = new System.Drawing.Size(630, 220);
             this.grpMonitorDirs.TabIndex = 9;
             this.grpMonitorDirs.TabStop = false;
             this.grpMonitorDirs.Text = "Thư mục Giám sát";
@@ -668,9 +697,9 @@ namespace WindowsFormsApplication1
             this.chkInitHashTaken.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.chkInitHashTaken.Location = new System.Drawing.Point(18, 188);
             this.chkInitHashTaken.Name = "chkInitHashTaken";
-            this.chkInitHashTaken.Size = new System.Drawing.Size(292, 25);
+            this.chkInitHashTaken.Size = new System.Drawing.Size(129, 25);
             this.chkInitHashTaken.TabIndex = 5;
-            this.chkInitHashTaken.Text = "Khởi tạo Hash đã lấy (Init Hash Taken)";
+            this.chkInitHashTaken.Text = "Khởi tạo Hash";
             this.chkInitHashTaken.UseVisualStyleBackColor = true;
             // 
             // txtInputMonitorDir
@@ -682,7 +711,7 @@ namespace WindowsFormsApplication1
             this.txtInputMonitorDir.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.txtInputMonitorDir.Location = new System.Drawing.Point(18, 28);
             this.txtInputMonitorDir.Name = "txtInputMonitorDir";
-            this.txtInputMonitorDir.Size = new System.Drawing.Size(490, 29);
+            this.txtInputMonitorDir.Size = new System.Drawing.Size(497, 29);
             this.txtInputMonitorDir.TabIndex = 0;
             // 
             // lstMonitorDirs
@@ -697,7 +726,7 @@ namespace WindowsFormsApplication1
             this.lstMonitorDirs.ItemHeight = 21;
             this.lstMonitorDirs.Location = new System.Drawing.Point(18, 58);
             this.lstMonitorDirs.Name = "lstMonitorDirs";
-            this.lstMonitorDirs.Size = new System.Drawing.Size(490, 107);
+            this.lstMonitorDirs.Size = new System.Drawing.Size(497, 107);
             this.lstMonitorDirs.TabIndex = 1;
             // 
             // btnAddMonitorDir
@@ -708,7 +737,7 @@ namespace WindowsFormsApplication1
             this.btnAddMonitorDir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddMonitorDir.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnAddMonitorDir.ForeColor = System.Drawing.Color.White;
-            this.btnAddMonitorDir.Location = new System.Drawing.Point(518, 66);
+            this.btnAddMonitorDir.Location = new System.Drawing.Point(525, 66);
             this.btnAddMonitorDir.Name = "btnAddMonitorDir";
             this.btnAddMonitorDir.Size = new System.Drawing.Size(80, 30);
             this.btnAddMonitorDir.TabIndex = 2;
@@ -723,7 +752,7 @@ namespace WindowsFormsApplication1
             this.btnRemoveMonitorDir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRemoveMonitorDir.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnRemoveMonitorDir.ForeColor = System.Drawing.Color.White;
-            this.btnRemoveMonitorDir.Location = new System.Drawing.Point(518, 104);
+            this.btnRemoveMonitorDir.Location = new System.Drawing.Point(525, 104);
             this.btnRemoveMonitorDir.Name = "btnRemoveMonitorDir";
             this.btnRemoveMonitorDir.Size = new System.Drawing.Size(80, 30);
             this.btnRemoveMonitorDir.TabIndex = 3;
@@ -738,7 +767,7 @@ namespace WindowsFormsApplication1
             this.btnBrowseMonitorDir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowseMonitorDir.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnBrowseMonitorDir.ForeColor = System.Drawing.Color.White;
-            this.btnBrowseMonitorDir.Location = new System.Drawing.Point(518, 28);
+            this.btnBrowseMonitorDir.Location = new System.Drawing.Point(525, 28);
             this.btnBrowseMonitorDir.Name = "btnBrowseMonitorDir";
             this.btnBrowseMonitorDir.Size = new System.Drawing.Size(80, 30);
             this.btnBrowseMonitorDir.TabIndex = 4;
@@ -755,11 +784,11 @@ namespace WindowsFormsApplication1
             this.grpIgnoreHash.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpIgnoreHash.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
             this.grpIgnoreHash.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(120)))));
-            this.grpIgnoreHash.Location = new System.Drawing.Point(649, 6);
+            this.grpIgnoreHash.Location = new System.Drawing.Point(656, 6);
             this.grpIgnoreHash.Margin = new System.Windows.Forms.Padding(10, 3, 3, 10);
             this.grpIgnoreHash.Name = "grpIgnoreHash";
             this.grpIgnoreHash.Padding = new System.Windows.Forms.Padding(15);
-            this.grpIgnoreHash.Size = new System.Drawing.Size(623, 220);
+            this.grpIgnoreHash.Size = new System.Drawing.Size(630, 220);
             this.grpIgnoreHash.TabIndex = 10;
             this.grpIgnoreHash.TabStop = false;
             this.grpIgnoreHash.Text = "Đường dẫn Bỏ qua Hash";
@@ -773,7 +802,7 @@ namespace WindowsFormsApplication1
             this.txtInputIgnoreHash.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.txtInputIgnoreHash.Location = new System.Drawing.Point(18, 28);
             this.txtInputIgnoreHash.Name = "txtInputIgnoreHash";
-            this.txtInputIgnoreHash.Size = new System.Drawing.Size(485, 29);
+            this.txtInputIgnoreHash.Size = new System.Drawing.Size(492, 29);
             this.txtInputIgnoreHash.TabIndex = 0;
             // 
             // lstIgnoreHash
@@ -788,7 +817,7 @@ namespace WindowsFormsApplication1
             this.lstIgnoreHash.ItemHeight = 21;
             this.lstIgnoreHash.Location = new System.Drawing.Point(18, 58);
             this.lstIgnoreHash.Name = "lstIgnoreHash";
-            this.lstIgnoreHash.Size = new System.Drawing.Size(485, 107);
+            this.lstIgnoreHash.Size = new System.Drawing.Size(492, 107);
             this.lstIgnoreHash.TabIndex = 1;
             // 
             // btnAddIgnoreHash
@@ -799,7 +828,7 @@ namespace WindowsFormsApplication1
             this.btnAddIgnoreHash.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddIgnoreHash.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnAddIgnoreHash.ForeColor = System.Drawing.Color.White;
-            this.btnAddIgnoreHash.Location = new System.Drawing.Point(512, 67);
+            this.btnAddIgnoreHash.Location = new System.Drawing.Point(519, 67);
             this.btnAddIgnoreHash.Name = "btnAddIgnoreHash";
             this.btnAddIgnoreHash.Size = new System.Drawing.Size(80, 30);
             this.btnAddIgnoreHash.TabIndex = 2;
@@ -814,7 +843,7 @@ namespace WindowsFormsApplication1
             this.btnRemoveIgnoreHash.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRemoveIgnoreHash.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnRemoveIgnoreHash.ForeColor = System.Drawing.Color.White;
-            this.btnRemoveIgnoreHash.Location = new System.Drawing.Point(512, 106);
+            this.btnRemoveIgnoreHash.Location = new System.Drawing.Point(519, 106);
             this.btnRemoveIgnoreHash.Name = "btnRemoveIgnoreHash";
             this.btnRemoveIgnoreHash.Size = new System.Drawing.Size(80, 30);
             this.btnRemoveIgnoreHash.TabIndex = 3;
@@ -829,7 +858,7 @@ namespace WindowsFormsApplication1
             this.btnBrowseIgnoreHash.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowseIgnoreHash.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnBrowseIgnoreHash.ForeColor = System.Drawing.Color.White;
-            this.btnBrowseIgnoreHash.Location = new System.Drawing.Point(512, 28);
+            this.btnBrowseIgnoreHash.Location = new System.Drawing.Point(519, 28);
             this.btnBrowseIgnoreHash.Name = "btnBrowseIgnoreHash";
             this.btnBrowseIgnoreHash.Size = new System.Drawing.Size(80, 30);
             this.btnBrowseIgnoreHash.TabIndex = 4;
@@ -850,7 +879,7 @@ namespace WindowsFormsApplication1
             this.grpIgnoreScanYara.Margin = new System.Windows.Forms.Padding(3, 10, 10, 3);
             this.grpIgnoreScanYara.Name = "grpIgnoreScanYara";
             this.grpIgnoreScanYara.Padding = new System.Windows.Forms.Padding(15);
-            this.grpIgnoreScanYara.Size = new System.Drawing.Size(623, 200);
+            this.grpIgnoreScanYara.Size = new System.Drawing.Size(630, 200);
             this.grpIgnoreScanYara.TabIndex = 11;
             this.grpIgnoreScanYara.TabStop = false;
             this.grpIgnoreScanYara.Text = "Bỏ qua Quét YARA";
@@ -864,7 +893,7 @@ namespace WindowsFormsApplication1
             this.txtInputIgnoreScanYara.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.txtInputIgnoreScanYara.Location = new System.Drawing.Point(18, 28);
             this.txtInputIgnoreScanYara.Name = "txtInputIgnoreScanYara";
-            this.txtInputIgnoreScanYara.Size = new System.Drawing.Size(490, 29);
+            this.txtInputIgnoreScanYara.Size = new System.Drawing.Size(497, 29);
             this.txtInputIgnoreScanYara.TabIndex = 0;
             // 
             // lstIgnoreScanYara
@@ -879,7 +908,7 @@ namespace WindowsFormsApplication1
             this.lstIgnoreScanYara.ItemHeight = 21;
             this.lstIgnoreScanYara.Location = new System.Drawing.Point(18, 58);
             this.lstIgnoreScanYara.Name = "lstIgnoreScanYara";
-            this.lstIgnoreScanYara.Size = new System.Drawing.Size(490, 107);
+            this.lstIgnoreScanYara.Size = new System.Drawing.Size(497, 107);
             this.lstIgnoreScanYara.TabIndex = 1;
             // 
             // btnAddIgnoreScanYara
@@ -890,7 +919,7 @@ namespace WindowsFormsApplication1
             this.btnAddIgnoreScanYara.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddIgnoreScanYara.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnAddIgnoreScanYara.ForeColor = System.Drawing.Color.White;
-            this.btnAddIgnoreScanYara.Location = new System.Drawing.Point(518, 66);
+            this.btnAddIgnoreScanYara.Location = new System.Drawing.Point(525, 66);
             this.btnAddIgnoreScanYara.Name = "btnAddIgnoreScanYara";
             this.btnAddIgnoreScanYara.Size = new System.Drawing.Size(80, 30);
             this.btnAddIgnoreScanYara.TabIndex = 2;
@@ -905,7 +934,7 @@ namespace WindowsFormsApplication1
             this.btnRemoveIgnoreScanYara.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRemoveIgnoreScanYara.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnRemoveIgnoreScanYara.ForeColor = System.Drawing.Color.White;
-            this.btnRemoveIgnoreScanYara.Location = new System.Drawing.Point(518, 104);
+            this.btnRemoveIgnoreScanYara.Location = new System.Drawing.Point(525, 104);
             this.btnRemoveIgnoreScanYara.Name = "btnRemoveIgnoreScanYara";
             this.btnRemoveIgnoreScanYara.Size = new System.Drawing.Size(80, 30);
             this.btnRemoveIgnoreScanYara.TabIndex = 3;
@@ -920,7 +949,7 @@ namespace WindowsFormsApplication1
             this.btnBrowseIgnoreScanYara.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowseIgnoreScanYara.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnBrowseIgnoreScanYara.ForeColor = System.Drawing.Color.White;
-            this.btnBrowseIgnoreScanYara.Location = new System.Drawing.Point(518, 28);
+            this.btnBrowseIgnoreScanYara.Location = new System.Drawing.Point(525, 28);
             this.btnBrowseIgnoreScanYara.Name = "btnBrowseIgnoreScanYara";
             this.btnBrowseIgnoreScanYara.Size = new System.Drawing.Size(80, 30);
             this.btnBrowseIgnoreScanYara.TabIndex = 4;
@@ -937,11 +966,11 @@ namespace WindowsFormsApplication1
             this.grpIgnoreSendAlert.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpIgnoreSendAlert.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
             this.grpIgnoreSendAlert.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(120)))));
-            this.grpIgnoreSendAlert.Location = new System.Drawing.Point(649, 246);
+            this.grpIgnoreSendAlert.Location = new System.Drawing.Point(656, 246);
             this.grpIgnoreSendAlert.Margin = new System.Windows.Forms.Padding(10, 10, 3, 3);
             this.grpIgnoreSendAlert.Name = "grpIgnoreSendAlert";
             this.grpIgnoreSendAlert.Padding = new System.Windows.Forms.Padding(15);
-            this.grpIgnoreSendAlert.Size = new System.Drawing.Size(623, 200);
+            this.grpIgnoreSendAlert.Size = new System.Drawing.Size(630, 200);
             this.grpIgnoreSendAlert.TabIndex = 12;
             this.grpIgnoreSendAlert.TabStop = false;
             this.grpIgnoreSendAlert.Text = "Bỏ qua Gửi Cảnh báo";
@@ -955,7 +984,7 @@ namespace WindowsFormsApplication1
             this.txtInputIgnoreSendAlert.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.txtInputIgnoreSendAlert.Location = new System.Drawing.Point(18, 28);
             this.txtInputIgnoreSendAlert.Name = "txtInputIgnoreSendAlert";
-            this.txtInputIgnoreSendAlert.Size = new System.Drawing.Size(485, 29);
+            this.txtInputIgnoreSendAlert.Size = new System.Drawing.Size(492, 29);
             this.txtInputIgnoreSendAlert.TabIndex = 0;
             // 
             // lstIgnoreSendAlert
@@ -970,7 +999,7 @@ namespace WindowsFormsApplication1
             this.lstIgnoreSendAlert.ItemHeight = 21;
             this.lstIgnoreSendAlert.Location = new System.Drawing.Point(18, 58);
             this.lstIgnoreSendAlert.Name = "lstIgnoreSendAlert";
-            this.lstIgnoreSendAlert.Size = new System.Drawing.Size(485, 107);
+            this.lstIgnoreSendAlert.Size = new System.Drawing.Size(492, 107);
             this.lstIgnoreSendAlert.TabIndex = 1;
             // 
             // btnAddIgnoreSendAlert
@@ -981,7 +1010,7 @@ namespace WindowsFormsApplication1
             this.btnAddIgnoreSendAlert.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddIgnoreSendAlert.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnAddIgnoreSendAlert.ForeColor = System.Drawing.Color.White;
-            this.btnAddIgnoreSendAlert.Location = new System.Drawing.Point(513, 65);
+            this.btnAddIgnoreSendAlert.Location = new System.Drawing.Point(520, 65);
             this.btnAddIgnoreSendAlert.Name = "btnAddIgnoreSendAlert";
             this.btnAddIgnoreSendAlert.Size = new System.Drawing.Size(80, 30);
             this.btnAddIgnoreSendAlert.TabIndex = 2;
@@ -996,7 +1025,7 @@ namespace WindowsFormsApplication1
             this.btnRemoveIgnoreSendAlert.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRemoveIgnoreSendAlert.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnRemoveIgnoreSendAlert.ForeColor = System.Drawing.Color.White;
-            this.btnRemoveIgnoreSendAlert.Location = new System.Drawing.Point(513, 102);
+            this.btnRemoveIgnoreSendAlert.Location = new System.Drawing.Point(520, 102);
             this.btnRemoveIgnoreSendAlert.Name = "btnRemoveIgnoreSendAlert";
             this.btnRemoveIgnoreSendAlert.Size = new System.Drawing.Size(80, 30);
             this.btnRemoveIgnoreSendAlert.TabIndex = 3;
@@ -1011,7 +1040,7 @@ namespace WindowsFormsApplication1
             this.btnBrowseIgnoreSendAlert.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowseIgnoreSendAlert.Font = new System.Drawing.Font("Segoe UI Semibold", 9F);
             this.btnBrowseIgnoreSendAlert.ForeColor = System.Drawing.Color.White;
-            this.btnBrowseIgnoreSendAlert.Location = new System.Drawing.Point(513, 28);
+            this.btnBrowseIgnoreSendAlert.Location = new System.Drawing.Point(520, 28);
             this.btnBrowseIgnoreSendAlert.Name = "btnBrowseIgnoreSendAlert";
             this.btnBrowseIgnoreSendAlert.Size = new System.Drawing.Size(80, 30);
             this.btnBrowseIgnoreSendAlert.TabIndex = 4;

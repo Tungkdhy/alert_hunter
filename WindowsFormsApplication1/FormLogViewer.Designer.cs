@@ -19,6 +19,8 @@
         private System.Windows.Forms.Button btnClearFilter;
         private System.Windows.Forms.Label lblSeverity;
         private FlatCombo cmbSeverity;
+        private System.Windows.Forms.Label lblTag;
+        private FlatCombo cmbTag;
 
         protected override void Dispose(bool disposing)
         {
@@ -45,6 +47,8 @@
             this.btnClearFilter = new System.Windows.Forms.Button();
             this.lblSeverity = new System.Windows.Forms.Label();
             this.cmbSeverity = new FlatCombo();
+            this.lblTag = new System.Windows.Forms.Label();
+            this.cmbTag = new FlatCombo();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLogs)).BeginInit();
             this.SuspendLayout();
             // 
@@ -197,7 +201,7 @@
             // btnFilter
             // 
             this.btnFilter.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
-            this.btnFilter.Location = new System.Drawing.Point(665, 84);
+            this.btnFilter.Location = new System.Drawing.Point(700, 84);
             this.btnFilter.Name = "btnFilter";
             this.btnFilter.Size = new System.Drawing.Size(120, 30);
             this.btnFilter.TabIndex = 10;
@@ -207,7 +211,7 @@
             // btnClearFilter
             // 
             this.btnClearFilter.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
-            this.btnClearFilter.Location = new System.Drawing.Point(535, 84);
+            this.btnClearFilter.Location = new System.Drawing.Point(850, 84);
             this.btnClearFilter.Name = "btnClearFilter";
             this.btnClearFilter.Size = new System.Drawing.Size(110, 30);
             this.btnClearFilter.TabIndex = 11;
@@ -237,9 +241,34 @@
             this.cmbSeverity.Size = new System.Drawing.Size(145, 31);
             this.cmbSeverity.TabIndex = 13;
             // 
+            // lblTag
+            // 
+            this.lblTag.AutoSize = true;
+            this.lblTag.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
+            this.lblTag.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.lblTag.Location = new System.Drawing.Point(535, 58);
+            this.lblTag.Name = "lblTag";
+            this.lblTag.Size = new System.Drawing.Size(88, 23);
+            this.lblTag.TabIndex = 14;
+            this.lblTag.Text = "Phiên bản:";
+            // 
+            // cmbTag
+            // 
+            this.cmbTag.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTag.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.cmbTag.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Underline);
+            this.cmbTag.FormattingEnabled = true;
+            this.cmbTag.ItemHeight = 23;
+            this.cmbTag.Location = new System.Drawing.Point(539, 84);
+            this.cmbTag.Name = "cmbTag";
+            this.cmbTag.Size = new System.Drawing.Size(145, 31);
+            this.cmbTag.TabIndex = 15;
+            // 
             // FormLogViewer
             // 
             this.ClientSize = new System.Drawing.Size(1000, 640);
+            this.Controls.Add(this.cmbTag);
+            this.Controls.Add(this.lblTag);
             this.Controls.Add(this.cmbSeverity);
             this.Controls.Add(this.lblSeverity);
             this.Controls.Add(this.btnClearFilter);

@@ -216,6 +216,9 @@
     <None Include="config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="config.template">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="db_config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

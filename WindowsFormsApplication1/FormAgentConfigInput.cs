@@ -21,6 +21,7 @@ namespace WindowsFormsApplication1
         private string configPath = "";
         private int previousTabIndex = 0;
         private bool isChangingTab = false; // Flag để tránh vòng lặp khi quay lại tab
+        private bool previousInitHashTaken = false; // Lưu giá trị init_hash_taken trước đó
 
         Color Primary = Color.FromArgb(25, 55, 120);
         Color PrimaryLight = Color.FromArgb(230, 240, 255);
@@ -135,6 +136,12 @@ namespace WindowsFormsApplication1
                     txtApiKey.Location = new Point(18 + halfWidth + 100, txtApiKey.Location.Y);
                     txtApiKey.Size = new Size(grpAgentConfig.Width - (18 + halfWidth + 100) - 18, txtApiKey.Height);
                     lblApiKey.Location = new Point(18 + halfWidth + 100, lblApiKey.Location.Y);
+                }
+
+                // txtVersion (Tag) - full width, responsive
+                if (txtVersion != null)
+                {
+                    txtVersion.Size = new Size(grpAgentConfig.Width - 36, txtVersion.Height);
                 }
             }
 
@@ -298,6 +305,33 @@ namespace WindowsFormsApplication1
 
         private void LoadDefaultConfig()
         {
+            // Kiểm tra và copy config.dat từ template nếu chưa có (ưu tiên làm việc này trước)
+            string configDatPath = Path.Combine(Application.StartupPath, "config.dat");
+            string configTemplatePath = Path.Combine(Application.StartupPath, "config.template");
+            
+            // Nếu chưa có config.dat và có config.template, copy từ template
+            if (!File.Exists(configDatPath) && File.Exists(configTemplatePath))
+            {
+                try
+                {
+                    // Copy file template thành config.dat
+                    File.Copy(configTemplatePath, configDatPath, false);
+                    System.Diagnostics.Debug.WriteLine($"Đã copy {configTemplatePath} thành {configDatPath}");
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Không có quyền copy file: {ex.Message}");
+                }
+                catch (IOException ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Lỗi I/O khi copy file: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Lỗi khi copy config.template: {ex.Message}");
+                }
+            }
+
             // Thử load agent_config.json trước
             string defaultConfigPath = Path.Combine(Application.StartupPath, "agent_config.json");
             if (File.Exists(defaultConfigPath))
@@ -308,8 +342,7 @@ namespace WindowsFormsApplication1
                 return;
             }
 
-            // Thử load config.dat (file mã hóa)
-            string configDatPath = Path.Combine(Application.StartupPath, "config.dat");
+            // Load config.dat nếu đã tồn tại hoặc vừa được tạo
             if (File.Exists(configDatPath))
             {
                 configPath = configDatPath;
@@ -318,22 +351,13 @@ namespace WindowsFormsApplication1
                 return;
             }
 
-            // Thử load agent_config.template hoặc config.template
-            string configTemplatePath = Path.Combine(Application.StartupPath, "agent_config.template");
-            if (File.Exists(configTemplatePath))
+            // Thử load agent_config.template
+            string agentConfigTemplatePath = Path.Combine(Application.StartupPath, "agent_config.template");
+            if (File.Exists(agentConfigTemplatePath))
             {
-                configPath = configTemplatePath;
+                configPath = agentConfigTemplatePath;
                 lblPath.Text = "Đường dẫn config: " + configPath;
-                LoadConfigFile(configTemplatePath);
-                return;
-            }
-
-            configTemplatePath = Path.Combine(Application.StartupPath, "config.template");
-            if (File.Exists(configTemplatePath))
-            {
-                configPath = configTemplatePath;
-                lblPath.Text = "Đường dẫn config: " + configPath;
-                LoadConfigFile(configTemplatePath);
+                LoadConfigFile(agentConfigTemplatePath);
                 return;
             }
 
@@ -461,12 +485,14 @@ namespace WindowsFormsApplication1
 
             // Init hash taken
             chkInitHashTaken.Checked = config["init_hash_taken"]?.ToObject<bool>() ?? false;
+            previousInitHashTaken = chkInitHashTaken.Checked; // Lưu giá trị ban đầu
 
             // Server configuration
             txtServerIP.Text = config["server_ip"]?.ToString() ?? "127.0.0.1";
             txtServerPort.Text = config["server_port"]?.ToString() ?? "8000";
             txtAgentID.Text = config["agent_id"]?.ToString() ?? "";
             txtApiKey.Text = config["api_key"]?.ToString() ?? "";
+            txtVersion.Text = config["tag"]?.ToString() ?? "";
             txtHttpTimeout.Text = config["http_timeout_sec"]?.ToString() ?? "15";
             txtDebounce.Text = config["debounce_ms"]?.ToString() ?? "350";
         }
@@ -550,6 +576,8 @@ namespace WindowsFormsApplication1
                 config["server_port"] = port;
             config["agent_id"] = txtAgentID.Text;
             config["api_key"] = txtApiKey.Text;
+            if (!string.IsNullOrEmpty(txtVersion.Text))
+                config["tag"] = txtVersion.Text;
             int timeout;
             if (int.TryParse(txtHttpTimeout.Text, out timeout))
                 config["http_timeout_sec"] = timeout;
@@ -623,6 +651,8 @@ namespace WindowsFormsApplication1
                 {
                     JObject config = JObject.Parse(txtJson.Text);
                     LoadConfigToForm(config);
+                    // Cập nhật previousInitHashTaken sau khi load từ JSON
+                    previousInitHashTaken = chkInitHashTaken.Checked;
                 }
                 catch
                 {
@@ -689,6 +719,18 @@ namespace WindowsFormsApplication1
                 }
             }
 
+            // Kiểm tra nếu init_hash_taken chuyển từ true sang false
+            bool currentInitHashTaken = config["init_hash_taken"]?.ToObject<bool>() ?? false;
+            if (previousInitHashTaken && !currentInitHashTaken)
+            {
+                // Yêu cầu người dùng lưu database trước
+                if (!SaveDatabaseBeforeDisablingInitHash())
+                {
+                    // Người dùng hủy, không lưu config
+                    return;
+                }
+            }
+
             string jsonText = config.ToString(Newtonsoft.Json.Formatting.Indented);
 
             // File .template và .example luôn lưu dưới dạng text thuần, không mã hóa
@@ -719,21 +761,49 @@ namespace WindowsFormsApplication1
             txtJson.Text = FormatJson(jsonText);
             LoadConfigToForm(config);
 
+            // Cập nhật giá trị previousInitHashTaken sau khi lưu thành công
+            previousInitHashTaken = currentInitHashTaken;
+
             // Cập nhật trạng thái nút service
             UpdateServiceButtonStatus();
 
-            // Restart service nếu có cấu hình trong db_config.json
+            // Restart service nếu có cấu hình trong db_config.json và service đang chạy
             string serviceName = GetServiceNameFromDbConfig();
             if (!string.IsNullOrWhiteSpace(serviceName))
             {
                 try
                 {
-                    RestartService(serviceName);
-                    ShowCustomMessageBox($"Đã lưu cấu hình thành công!\nĐã restart service: {serviceName}", "Thành công", MessageBoxIcon.Information);
+                    // Kiểm tra service status trước khi restart
+                    bool isServiceRunning = false;
+                    using (ServiceController service = new ServiceController(serviceName))
+                    {
+                        try
+                        {
+                            service.Refresh();
+                            isServiceRunning = (service.Status == ServiceControllerStatus.Running);
+                        }
+                        catch
+                        {
+                            // Service không tồn tại hoặc không thể truy cập
+                            isServiceRunning = false;
+                        }
+                    }
+
+                    if (isServiceRunning)
+                    {
+                        // Chỉ restart nếu service đang chạy
+                        RestartService(serviceName);
+                        ShowCustomMessageBox($"Đã lưu cấu hình thành công!\nĐã restart service: {serviceName}", "Thành công", MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        // Service không chạy, không cần restart
+                        ShowCustomMessageBox("Đã lưu cấu hình thành công!", "Thành công", MessageBoxIcon.Information);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    ShowCustomMessageBox($"Đã lưu cấu hình thành công!\nLỗi restart service: {ex.Message}", "Cảnh báo", MessageBoxIcon.Warning);
+                    ShowCustomMessageBox($"Đã lưu cấu hình thành công!\nLỗi khi kiểm tra/restart service: {ex.Message}", "Cảnh báo", MessageBoxIcon.Warning);
                 }
             }
             else
@@ -931,17 +1001,54 @@ namespace WindowsFormsApplication1
                 {
                     try
                     {
-                        using (ServiceController service = new ServiceController(serviceName))
+                        // Kiểm tra xem service có tồn tại không
+                        ServiceController[] services = ServiceController.GetServices();
+                        bool serviceExists = services.Any(s => s.ServiceName.Equals(serviceName, StringComparison.OrdinalIgnoreCase));
+                        
+                        if (!serviceExists)
                         {
-                            service.Refresh();
-                            isServiceRunning = (service.Status == ServiceControllerStatus.Running);
+                            System.Diagnostics.Debug.WriteLine($"Service '{serviceName}' không tồn tại trong danh sách services");
+                            isServiceRunning = false;
+                        }
+                        else
+                        {
+                            using (ServiceController service = new ServiceController(serviceName))
+                            {
+                                service.Refresh();
+                                isServiceRunning = (service.Status == ServiceControllerStatus.Running);
+                                System.Diagnostics.Debug.WriteLine($"Service '{serviceName}' status: {service.Status}");
+                            }
                         }
                     }
-                    catch
+                    catch (InvalidOperationException ex)
                     {
                         // Service không tồn tại hoặc không thể truy cập
+                        // Có thể cần quyền Administrator
+                        System.Diagnostics.Debug.WriteLine($"InvalidOperationException khi check service '{serviceName}': {ex.Message}");
                         isServiceRunning = false;
                     }
+                    catch (System.ServiceProcess.TimeoutException ex)
+                    {
+                        // Timeout khi check service
+                        System.Diagnostics.Debug.WriteLine($"TimeoutException khi check service '{serviceName}': {ex.Message}");
+                        isServiceRunning = false;
+                    }
+                    catch (System.ComponentModel.Win32Exception ex)
+                    {
+                        // Lỗi Windows API - có thể do quyền truy cập
+                        System.Diagnostics.Debug.WriteLine($"Win32Exception khi check service '{serviceName}': {ex.Message} (Error code: {ex.NativeErrorCode})");
+                        isServiceRunning = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Lỗi khác
+                        System.Diagnostics.Debug.WriteLine($"Exception khi check service '{serviceName}': {ex.GetType().Name} - {ex.Message}");
+                        isServiceRunning = false;
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Service name là null hoặc rỗng, không thể check status");
                 }
 
                 // Cập nhật text và màu nút
@@ -956,9 +1063,10 @@ namespace WindowsFormsApplication1
                     btnRunBat.BackColor = SuccessColor;
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 // Nếu có lỗi, mặc định hiển thị "Chạy Agent"
+                System.Diagnostics.Debug.WriteLine($"Lỗi trong UpdateServiceButtonStatus: {ex.GetType().Name} - {ex.Message}\nStack trace: {ex.StackTrace}");
                 btnRunBat.Text = "▶ Chạy Agent";
                 btnRunBat.BackColor = SuccessColor;
             }
@@ -1178,108 +1286,8 @@ namespace WindowsFormsApplication1
 
         private string GetServiceNameFromDbConfig()
         {
-            try
-            {
-                // Thử load db_config.json trước
-                string configPath = Path.Combine(Application.StartupPath, "db_config.json");
-                if (!File.Exists(configPath))
-                {
-                    // Thử load db_config.dat
-                    configPath = Path.Combine(Application.StartupPath, "db_config.dat");
-                    if (!File.Exists(configPath))
-                    {
-                        // Thử load db_config.template
-                        configPath = Path.Combine(Application.StartupPath, "db_config.template");
-                        if (!File.Exists(configPath))
-                        {
-                            // Thử load db_config.example (tương thích)
-                            configPath = Path.Combine(Application.StartupPath, "db_config.example");
-                            if (!File.Exists(configPath))
-                            {
-                                // Không tìm thấy config, không có service để restart
-                                return null;
-                            }
-                        }
-                    }
-                }
-
-                string textContent = "";
-
-                // File .template và .example luôn là file text, không cần giải mã
-                if (configPath.EndsWith(".template", StringComparison.OrdinalIgnoreCase) || 
-                    configPath.EndsWith(".example", StringComparison.OrdinalIgnoreCase))
-                {
-                    textContent = File.ReadAllText(configPath, Encoding.UTF8);
-                    
-                    // Loại bỏ BOM nếu có
-                    if (textContent.Length > 0 && textContent[0] == '\uFEFF')
-                    {
-                        textContent = textContent.Substring(1);
-                    }
-
-                    textContent = textContent.Trim();
-                }
-                else
-                {
-                    // Đọc file dưới dạng binary để xử lý cả file .dat (binary) và .json (text)
-                    byte[] fileBytes = File.ReadAllBytes(configPath);
-
-                    // Kiểm tra xem có phải file mã hóa không
-                    if (fileBytes.Length >= 28)
-                    {
-                        try
-                        {
-                            // Thử giải mã như file mã hóa
-                            string base64Content = Convert.ToBase64String(fileBytes);
-                            textContent = DecryptDbConfig(base64Content);
-                        }
-                        catch
-                        {
-                            // Không phải file mã hóa, xử lý như text
-                            textContent = Encoding.UTF8.GetString(fileBytes);
-                        }
-                    }
-                    else
-                    {
-                        // Xử lý như file text (JSON)
-                        textContent = Encoding.UTF8.GetString(fileBytes);
-                    }
-
-                    // Loại bỏ BOM nếu có
-                    if (textContent.Length > 0 && textContent[0] == '\uFEFF')
-                    {
-                        textContent = textContent.Substring(1);
-                    }
-
-                    textContent = textContent.Trim();
-
-                    // Thử giải mã nếu là base64 (chỉ thử nếu có vẻ như base64)
-                    if (!string.IsNullOrEmpty(textContent) && textContent.Length > 50 &&
-                        !textContent.TrimStart().StartsWith("{"))
-                    {
-                        try
-                        {
-                            textContent = DecryptDbConfig(textContent);
-                        }
-                        catch
-                        {
-                            // File chưa được mã hóa, giữ nguyên
-                        }
-                    }
-                }
-
-                // Parse JSON
-                JObject config = JObject.Parse(textContent);
-                string serviceName = config["restart_service"]?.ToString();
-
-                return string.IsNullOrWhiteSpace(serviceName) ? null : serviceName;
-            }
-            catch (Exception ex)
-            {
-                // Log lỗi để debug (có thể bỏ comment để xem lỗi)
-                // MessageBox.Show($"Lỗi đọc db_config: {ex.Message}", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return null; // Lỗi đọc config, trả về null
-            }
+            // Fix cứng tên service là wsdetector
+            return "wsdetector";
         }
 
         private string DecryptDbConfig(string cipherText)
@@ -1392,6 +1400,82 @@ namespace WindowsFormsApplication1
         private void scrollPanel_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private bool SaveDatabaseBeforeDisablingInitHash()
+        {
+            try
+            {
+                string sourceDbPath = txtSqlitePath.Text.Trim();
+                
+                // Kiểm tra xem có đường dẫn database không
+                if (string.IsNullOrEmpty(sourceDbPath))
+                {
+                    ShowCustomMessageBox("Chưa có đường dẫn Hash DB! Vui lòng cấu hình đường dẫn Hash DB trước.", "Cảnh báo", MessageBoxIcon.Warning);
+                    return false;
+                }
+
+                // Kiểm tra file database có tồn tại không
+                if (!File.Exists(sourceDbPath))
+                {
+                    ShowCustomMessageBox($"File database không tồn tại:\n{sourceDbPath}\n\nVui lòng kiểm tra lại đường dẫn Hash DB.", "Lỗi", MessageBoxIcon.Error);
+                    return false;
+                }
+
+                // Hiển thị dialog để chọn nơi lưu database
+                using (SaveFileDialog sfd = new SaveFileDialog())
+                {
+                    sfd.Filter = "SQLite Database (*.db)|*.db|All Files (*.*)|*.*";
+                    sfd.Title = "Lưu file Hash DB trước khi tắt Init Hash Taken";
+                    sfd.FileName = Path.GetFileNameWithoutExtension(sourceDbPath) + "_backup_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".db";
+                    
+                    // Đặt thư mục mặc định là thư mục chứa file database gốc hoặc thư mục hiện tại
+                    if (!string.IsNullOrEmpty(Path.GetDirectoryName(sourceDbPath)))
+                    {
+                        sfd.InitialDirectory = Path.GetDirectoryName(sourceDbPath);
+                    }
+                    else
+                    {
+                        sfd.InitialDirectory = Application.StartupPath;
+                    }
+
+                    if (sfd.ShowDialog(this) == DialogResult.OK)
+                    {
+                        string targetDbPath = sfd.FileName;
+
+                        try
+                        {
+                            // Copy file database
+                            File.Copy(sourceDbPath, targetDbPath, true);
+                            ShowCustomMessageBox($"Đã lưu file Hash DB thành công!\n\nĐường dẫn: {targetDbPath}", "Thành công", MessageBoxIcon.Information);
+                            return true;
+                        }
+                        catch (Exception ex)
+                        {
+                            ShowCustomMessageBox($"Lỗi khi lưu file Hash DB:\n{ex.Message}", "Lỗi", MessageBoxIcon.Error);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        // Người dùng hủy, hỏi lại xem có muốn tiếp tục không
+                        DialogResult result = ShowCustomMessageBoxWithCancel(
+                            "Bạn đã hủy việc lưu file Hash DB.\n\n" +
+                            "Nếu tiếp tục lưu cấu hình (tắt Init Hash Taken), dữ liệu hash có thể bị mất.\n\n" +
+                            "Bạn có muốn tiếp tục lưu cấu hình không?",
+                            "Xác nhận",
+                            MessageBoxIcon.Warning
+                        );
+
+                        return (result == DialogResult.OK);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowCustomMessageBox($"Lỗi khi xử lý lưu database: {ex.Message}", "Lỗi", MessageBoxIcon.Error);
+                return false;
+            }
         }
 
 
